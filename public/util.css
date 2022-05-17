@@ -1,0 +1,90 @@
+/*dpi*/
+
+
+/* for 1080+ px width screen */
+
+
+/* for 1080 px width screen */
+
+html {
+    font-family: 'PingFang SC',"Helvetica Neue", Helvetica, sans-serif;
+    /*谷歌浏览器字体最小字体12px*/
+    -webkit-text-size-adjust: 100%;
+    /*100%/none 关闭字体大小自动调整功能*/
+    /*a标签及拥有 :active伪类的元素有默认的高亮框*/
+    -webkit-tap-hightlight-color: transparent;
+    /*禁止文本被选中*/
+    -webkit-user-select: none;
+    background-color: #f7f8fa;
+    height: 100%;
+    
+}
+
+body {
+    font-family: 'PingFang SC', Helvetica;
+    overflow-x: hidden;
+    /*开启moblie网页快速滚动和回弹的效果*/
+    -webkit-overflow-scrolling: touch;
+    height: 100%;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+a {
+    display: block;
+    width: 100%;
+    color: #333;
+    text-decoration: none;
+}
+
+img {
+    border: 0;
+    display: block;
+    width: 100%;
+    vertical-align: middle;
+}
+
+a,
+img {
+    /*阻止长按页面，弹出菜单的方法。*/
+    -webkit-touch-callout: none;
+}
+
+input,
+textarea {
+    -webkit-appearance: none;
+    outline: none;
+    border: none;
+}
+
+.fl {
+    float: left;
+}
+
+.fr {
+    float: right;
+}
+
+.clearfix:after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 0;
+    clear: both;
+}
+
+li,
+ol {
+    list-style: none;
+}
+
+
+
+.bg {
+    background-color: #f0f4f7;
+}
