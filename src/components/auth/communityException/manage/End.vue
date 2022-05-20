@@ -1,8 +1,8 @@
 <template>
   <div class="box exceptionInfoBox">
     <van-swipe-cell class="box cellBox">
-      <van-row class="rowBox box">
-        <van-col span="8 imageBox box">
+      <van-row class="rowBox">
+        <van-col span="8 imageBox">
           <img class="img" :src="avatarUrl" />
         </van-col>
         <van-col span="16">
