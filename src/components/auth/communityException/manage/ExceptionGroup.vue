@@ -59,7 +59,7 @@ export default {
       },
       list: [], // 页面列表信息
       query: {
-        status: this.active,
+        status: 0,
         exceptionType: '',
         userName: '',
       }
@@ -72,6 +72,12 @@ export default {
       handler(newValue, oldVale) { //handler什么时候调用？当isHot发生改变时。
         this.list.splice(0, this.list.length)
         this.findException() // 查询列表
+      }
+    },
+    active: {
+      immediate: true,
+      handler() {
+        this.query.status = this.active
       }
     }
   },
