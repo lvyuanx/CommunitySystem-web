@@ -1,6 +1,6 @@
 <template>
   <div class="box">
-    <van-dialog v-model="show" title="选择管理范围" show-cancel-button :before-close="beforeClose" @confirm="confirm" @close="closePoup" @open="openPoup">
+    <van-dialog v-model="show" title="选择用户" show-cancel-button :before-close="beforeClose" @confirm="confirm" @close="closePoup" @open="openPoup">
       <van-row>
         <van-col span="24">
           <van-search v-model="findQuery.name" placeholder="请输入搜索关键词" />
