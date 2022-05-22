@@ -1,0 +1,30 @@
+{
+  "id": "3416797",
+  "name": "图标",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "15765372",
+      "name": "验证码",
+      "font_class": "yanzhengma",
+      "unicode": "e699",
+      "unicode_decimal": 59033
+    },
+    {
+      "icon_id": "7797608",
+      "name": "成功",
+      "font_class": "chenggong",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
+    },
+    {
+      "icon_id": "8045781",
+      "name": "右翻页",
+      "font_class": "youfanye",
+      "unicode": "e67e",
+      "unicode_decimal": 59006
+    }
+  ]
+}

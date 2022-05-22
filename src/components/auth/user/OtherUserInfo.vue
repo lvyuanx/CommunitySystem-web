@@ -106,8 +106,7 @@ export default {
 
   },
   beforeDestroy() {
-    this.$bus.$off("changeShow") //生命周期结束，销毁自定义事件
-    this.$bus.$off("changeAddress") //生命周期结束，销毁自定义事件
+
   },
   watch: {
     qrCodeInfo: {

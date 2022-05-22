@@ -218,3 +218,8 @@ export const readMessageReq = params => {
 export const trFindListReq = params => {
 	return getRequest('/community/temperatureRegistration/findList', params)
 }
+
+// 查询登录用户是否含有住址信息
+export const checkUserHasAddressReq = params => {
+	return getRequest('/community/period/checkUserHasAddress', params)
+}

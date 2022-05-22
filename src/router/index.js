@@ -3,11 +3,20 @@ import VueRouter from 'vue-router'
 
 export default new VueRouter({
 	routes: [
+		// {
+		// 	// 登录组件
+		// 	name: 'login',
+		// 	path: '/',
+		// 	component: () => import('../components/login/Login'),
+		// 	meta: {
+		// 		index: 1
+		// 	}
+		// },
 		{
 			// 登录组件
-			name: 'login',
+			name: 'userLogin',
 			path: '/',
-			component: () => import('../components/login/Login'),
+			component: () => import('../components/login/UserLogin.vue'),
 			meta: {
 				index: 1
 			}

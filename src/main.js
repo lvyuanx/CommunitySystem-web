@@ -8,6 +8,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 import VueRouter from 'vue-router'
 import 'vant/lib/index.css'
 import './utils/appback' //解决hbuilder打包vue项目app点击手机返回键直接退出app的问题
+import './assets/font/iconfont/iconfont.css'
 
 // 引入路由器
 import router from './router/index'
@@ -20,6 +21,7 @@ import {
 	getLStore,
 	removeLStore
 } from './utils/storage'
+import less from 'less'
 // vant组件
 import {
 	Toast,
@@ -69,7 +71,8 @@ import {
 	DropdownMenu,
 	DropdownItem,
 	Checkbox,
-	CheckboxGroup
+	CheckboxGroup,
+	Slider
 } from 'vant'
 // uuid
 import UUID from 'vue-uuid'
@@ -125,6 +128,8 @@ Vue.use(VueRouter)
 	.use(DropdownItem)
 	.use(Checkbox)
 	.use(CheckboxGroup)
+	.use(Slider)
+	.use(less)
 Vue.prototype.setStore = setStore
 Vue.prototype.getStore = getStore
 Vue.prototype.removeStore = removeStore

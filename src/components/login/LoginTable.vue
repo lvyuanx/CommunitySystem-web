@@ -67,6 +67,7 @@
       </div>
     </div>
     <!--消息弹窗END-->
+
     <!--房间选择START-->
     <van-popup v-model="show" round position="bottom">
       <van-cascader v-model="cascaderValue" title="请选择家庭住址" :options="options" @close="show = false" @finish="onFinish" />

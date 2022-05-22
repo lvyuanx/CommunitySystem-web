@@ -26,6 +26,5 @@ module.exports = {
 				changeOrigin: true //用于支持请求头中的host值
 			}
 		}
-	},
-	publicPath: './'
+	}
 }

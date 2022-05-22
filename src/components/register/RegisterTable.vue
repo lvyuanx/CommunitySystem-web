@@ -1,12 +1,7 @@
 <template>
   <div class="row p-1">
     <div class="col-2">
-      <h3>
-        <i class="bi bi-arrow-left font-weight-bold text-durk mt-1" @click="toPreviousPage"></i>
-      </h3>
-    </div>
-    <div class="col-12">
-      <h2 class="text-center text-primary">用户注册</h2>
+      <nav-top-bar title="用户注册" :leftArrow="true" :rightArrow="false" />
     </div>
 
     <!--登录表单START-->
@@ -73,10 +68,11 @@
 
 <script>
 import { captchaReq, isRepeatReq, registerReq } from '../../utils/api'
-
+import NavTopBar from '../commons/NavTopBar.vue'
 
 export default {
   name: "RegisterTable",
+  components: { NavTopBar },
   data() {
     return {
       captchaImg: "",
