@@ -17,7 +17,7 @@
       <van-col span="20">
         <div class="input_control" style="margin-bottom:0px">
           <span class="passwordIcon"></span>
-          <input type="password" v-model="loginData.password" name="password" id="password" placeholder="请输入密码">
+          <input type="password" @click="changeData" v-model="loginData.password" name="password" id="password" placeholder="请输入密码">
           <p class="tips"><a href="javascript:void(0)" @click="tips">忘记密码？</a></p>
         </div>
 
@@ -115,6 +115,13 @@ export default {
     this.$bus.$off("changeAddress")
   },
   methods: {
+    // 点击密码输入框，自动填充的密码情空
+    changeData() {
+      if (this.loginData.rememberFlag) {
+        this.loginData.rememberFlag = false;
+        this.loginData.password = "";
+      }
+    },
     actionLogin() { // 登录
       if (this.loginData.username.trim() == '' || this.loginData.password.trim() == '' || this.loginData.captcha.trim() == '') {
         this.$toast("登录信息不能为空")
