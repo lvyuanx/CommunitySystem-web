@@ -29,7 +29,7 @@
             <input type="text" v-model="loginData.captcha" name="captcha" id="captcha" placeholder="请输入验证码">
           </div>
         </van-row>
-        <van-row>
+        <van-row style="padding-left:3px">
           <van-checkbox v-model="rememberMe" class="rembBox">记住我</van-checkbox>
         </van-row>
       </van-col>
