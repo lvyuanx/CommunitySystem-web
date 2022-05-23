@@ -8,8 +8,7 @@
         <van-swipe-cell v-for="item in list" :key="item.userId">
           <div class="itemBox">
             <van-row class="rowBox">
-              <van-col class="colBox imageBox" span="8">
-                <img :src="item.avatarUrl" class="img" alt="用户头像">
+              <van-col class="imageBox" span="8" :style="{'background-image': 'url(' + item.avatarUrl + ')'}">
               </van-col>
               <van-col span="16">
                 <ul>
@@ -242,21 +241,22 @@ export default {
 .delete-button {
   height: 100%;
 }
-
-.img {
-  width: 85%;
+.imageBox {
+  display: inline-block;
+  vertical-align: top;
+  width: 110px; /* 容器必须设置宽高 */
+  height: 110px;
+  background-size: cover;
+  background-position: center center;
+  border: 1px solid #eee;
   border-radius: 5px;
-  border: 1px solid rgb(235, 232, 232);
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  margin: 5px;
 }
 .itemBox {
   height: 100%;
   width: 100%;
   background-color: white;
-  height: 150px;
+  height: 100%;
   margin-top: 3px;
 }
 .rowBox {
@@ -264,10 +264,6 @@ export default {
 }
 .colBox {
   height: 100%;
-}
-.imageBox {
-  height: 100%;
-  position: relative;
 }
 li {
   font-size: 14px;

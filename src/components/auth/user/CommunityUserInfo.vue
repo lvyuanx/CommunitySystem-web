@@ -2,8 +2,7 @@
   <div class="box exceptionInfoBox">
     <van-swipe-cell class="box cellBox">
       <van-row class="rowBox">
-        <van-col span="8 imageBox">
-          <img class="img" :src="avatarUrl" />
+        <van-col span="8 imageBox" :style="{'background-image': 'url(' + avatarUrl + ')'}">
         </van-col>
         <van-col span="16 infoBox">
           <van-row class="lineBox">
@@ -226,19 +225,16 @@ export default {
 .cell-button {
   height: 100%;
 }
-
 .imageBox {
-  height: 130px;
-  position: relative;
-}
-.img {
-  width: 85%;
+  display: inline-block;
+  vertical-align: top;
+  width: 110px; /* 容器必须设置宽高 */
+  height: 110px;
+  background-size: cover;
+  background-position: center center;
+  border: 1px solid #eee;
   border-radius: 5px;
-  border: 1px solid rgb(235, 232, 232);
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  margin: 5px;
 }
 li {
   font-size: 14px;
