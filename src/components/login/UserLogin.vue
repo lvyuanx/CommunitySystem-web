@@ -46,7 +46,7 @@
     <!--房间选择START-->
     <select-address :isShow="isShowSelectAddress" :userId="loginUserId" />
     <!--房间选择END-->
-    <p class="toRegister">还没有账号？<a href="javascript:void(0)" @click="toRegister">去注册</a></p>
+    <p class="toRegister" v-show="isShowBottom">还没有账号？<a href="javascript:void(0)" @click="toRegister">去注册</a></p>
   </div>
 </template>
 
@@ -66,6 +66,8 @@ export default {
   components: { SildToUnLock, SelectAddress },
   data() {
     return {
+      isShowBottom: true,  //显示或者隐藏footer
+      documentHeight: document.documentElement.clientHeight,  //默认屏幕高度
       show: false,
       captchaImg: '',
       loginUserId: '',
@@ -85,6 +87,16 @@ export default {
     this.nowTimer = new Date().getTime();
   },
   mounted() {
+    window.onresize = () => {
+      return (() => {
+        if (this.documentHeight > document.documentElement.clientHeight) {
+          this.isShowBottom = false
+        } else {
+          this.isShowBottom = true
+        }
+      })()
+    }
+
     this.initCaptcha() // 初始化验证码
     // 判断之前登录是否选择记住我
     let rememberInfo = JSON.parse(localStorage.getItem("rememberInfo"));
