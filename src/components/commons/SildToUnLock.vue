@@ -33,82 +33,86 @@ export default {
       bgColor: null,
       txt: "",
       successMoveDistance: "",
+      slider: null,
+      downX: '',
     };
   },
   mounted() {
     this.$bus.$on("loginError", () => { //在总线上创建自定义事件用于接收数据
-      isSuccess = false
+      this.isSuccess = false
       this.text = "滑动登录"
       this.txt.style.color = "#00bffe";
       this.isSuccess = false
-      mouseupHandler();
+      this.mouseupHandler();
     })
-    let _this = this;
-    let isSuccess = _this.isSuccess;
-    let box = this.getEle("#box"); //容器
-    this.bgColor = this.getEle(".bgColor"); //背景色
-    let bgColor = this.bgColor;
-    this.txt = this.getEle(".txt"); //文本
-    let slider = this.getEle(".slider"); //滑块
-    this.slider = slider;
-    let icon = this.getEle(".slider>i");
-    let successMoveDistance = box.offsetWidth - slider.offsetWidth; //解锁需要滑动的距离
-    this.successMoveDistance = successMoveDistance;
-    let downX;
-    slider.onmousedown = mousedownHandler;
-    slider.ontouchstart = mousedownHandler;
-    //按下
-    function mousedownHandler(e) {
-      bgColor.style.transition = "";
-      slider.style.transition = "";
-      var e = e || window.event || e.which;
-      downX = e.clientX ? e.clientX : e.changedTouches[0].clientX;
-      if (!this.isSuccess) {
-        //在鼠标按下时，分别给鼠标添加移动和松开事件
-        document.onmousemove = mousemoveHandler;
-        document.onmouseup = mouseupHandler;
-        //添加移动端对应事件
-        document.ontouchmove = mousemoveHandler;
-        document.ontouchend = mouseupHandler;
-      }
-    }
-    //滑动
-    function mousemoveHandler(e) {
-      var e = e || window.event || e.which;
-      var moveX = e.clientX ? e.clientX : e.changedTouches[0].clientX;
-      var offsetX = _this.getOffsetX(moveX - downX, 0, successMoveDistance);
-      bgColor.style.width = moveX - 30 + "px";
-      slider.style.left = offsetX + "px";
-
-      if (offsetX == successMoveDistance) {
-        isSuccess = true;
-        bgColor.style.width = offsetX + downX - 30 + "px";
-        slider.style.left = offsetX + "px";
-        _this.success();
-        //滑动成功时，移除鼠标按下事件和鼠标移动事件
-        slider.onmousedown = null;
-        document.onmousemove = null;
-        //移除移动端事件
-        document.ontouchstart = null;
-        document.ontouchmove = null;
-      }
-      //如果不设置滑块滑动时会出现问题（目前还不知道为什么）
-      e.preventDefault();
-    }
-    //松开
-    function mouseupHandler(e) {
-      if (!isSuccess) {
-        bgColor.style.width = 0 + "px";
-        slider.style.left = 0 + "px";
-        bgColor.style.transition = "width 0.6s linear";
-        slider.style.transition = "left 0.6s linear";
-      }
-    }
+    this.load();
+    window.onresize = () => { // 监听页面变化
+      return (() => {
+        this.load();
+      })()
+    };
   },
   beforeDestroy() {
     this.$bus.$off("loginError") //生命周期结束，销毁自定义事件
   },
   methods: {
+    load() {
+      let box = this.getEle("#box"); //容器
+      this.bgColor = this.getEle(".bgColor"); //背景色
+      this.txt = this.getEle(".txt"); //文本
+      this.slider = this.getEle(".slider"); //滑块
+      this.successMoveDistance = box.offsetWidth - this.slider.offsetWidth; //解锁需要滑动的距离
+      this.slider.onmousedown = this.mousedownHandler
+      this.slider.ontouchstart = this.mousedownHandler
+    },
+    //按下
+    mousedownHandler(e) {
+      this.bgColor.style.transition = "";
+      this.slider.style.transition = "";
+      var e = e || window.event || e.which;
+      this.downX = e.clientX ? e.clientX : e.changedTouches[0].clientX;
+      if (!this.isSuccess) {
+        //在鼠标按下时，分别给鼠标添加移动和松开事件
+        document.onmousemove = this.mousemoveHandler;
+        document.onmouseup = this.mouseupHandler;
+        //添加移动端对应事件
+        document.ontouchmove = this.mousemoveHandler;
+        document.ontouchend = this.mouseupHandler;
+      }
+    },
+    //滑动
+    mousemoveHandler(e) {
+      var e = e || window.event || e.which;
+      var moveX = e.clientX ? e.clientX : e.changedTouches[0].clientX;
+      var offsetX = this.getOffsetX(moveX - this.downX, 0, this.successMoveDistance);
+      this.bgColor.style.width = moveX - 30 + "px";
+      this.slider.style.left = offsetX + "px";
+      if (offsetX == this.successMoveDistance) {
+        this.isSuccess = true;
+        this.bgColor.style.width = offsetX + this.downX - 30 + "px";
+        this.slider.style.left = offsetX + "px";
+
+        //滑动成功时，移除鼠标按下事件和鼠标移动事件
+        this.slider.onmousedown = null;
+        document.onmousemove = null;
+        //移除移动端事件
+        document.ontouchstart = null;
+        document.ontouchmove = null;
+
+        this.success();
+      }
+      //如果不设置滑块滑动时会出现问题（目前还不知道为什么）
+      e.preventDefault();
+    },
+    //松开
+    mouseupHandler(e) {
+      if (!this.isSuccess) {
+        this.bgColor.style.width = 0 + "px";
+        this.slider.style.left = 0 + "px";
+        this.bgColor.style.transition = "width 0.6s linear";
+        this.slider.style.transition = "left 0.6s linear";
+      }
+    },
     getEle(selector) {
       return document.querySelector(selector);
     },
@@ -120,7 +124,6 @@ export default {
       }
       return offset;
     },
-
     success() {
       this.text = "登陆中";
       this.bgColor.style.backgroundColor = "#009dd0";
@@ -129,32 +132,6 @@ export default {
       this.isSuccess = true;
       this.$emit("actionLogin");
     },
-    // login() {
-    //   const userName = this.username.trim();
-    //   const userPwd = encryptedData(this.password);
-    //   this.$store
-    //     .dispatch("login", {
-    //       userName: userName,
-    //       passWord: userPwd,
-    //       verifyCode: "",
-    //     })
-    //     .then((res) => {
-    //       if (res.data.code === 200) {
-    //         this.text = "登录成功";
-    //         this.isSuccess = true;
-    //         this.$router.push("/homepage");
-    //         this.isSuccess = false;
-    //         this.slider.style.left = 0 + "px";
-    //       } else {
-    //         Toast(res.data.message);
-    //       }
-    //     })
-    //     .catch((err) => {
-    //       Toast(err.data.message);
-    //       this.username = "";
-    //       this.password = "";
-    //     });
-    // },
   },
 };
 </script>
