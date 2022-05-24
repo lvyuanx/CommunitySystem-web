@@ -1,5 +1,5 @@
 <template>
-  <div class="box">
+  <div>
     <van-popup v-model="show" round position="bottom" @close="closePoup">
       <van-cascader v-model="cascaderValue" title="请选择家庭住址" :options="options" @close="show = false" @finish="onFinish" />
     </van-popup>

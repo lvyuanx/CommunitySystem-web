@@ -2,7 +2,7 @@
   <div id="box">
     <div class="bgColor"></div>
     <div class="txt">{{ text }}</div>
-    <div class="slider">
+    <div class="slider" @touchstart='touchstart' @touchmove='touchmove' @touchend="touchend">
       <i v-show="!isSuccess" class="iconfont icon-youfanye"></i>
       <i v-show="isSuccess" class="iconfont icon-chenggong"></i>
     </div>
@@ -32,9 +32,11 @@ export default {
       isSuccess: false,
       bgColor: null,
       txt: "",
-      successMoveDistance: "",
+      successMoveDistance: 0, // 最大滑行距离
       slider: null,
-      downX: '',
+      startX: 0,
+      nowX: 0,
+      offsetX: 0,
     };
   },
   mounted() {
@@ -42,71 +44,40 @@ export default {
       this.isSuccess = false
       this.text = "滑动登录"
       this.txt.style.color = "#00bffe";
-      this.isSuccess = false
-      this.mouseupHandler();
+      this.bgColor.style.width = 0 + "px"; // 调整背景颜色
+      this.slider.style.left = -5 + "px";  // 调整滑块的偏移距离
+      this.bgColor.style.transition = "width 0.5s linear";
+      this.slider.style.transition = "left 0.5s linear";
     })
-    this.load();
-    window.onresize = () => { // 监听页面变化
-      return (() => {
-        this.load();
-      })()
-    };
+    this.bgColor = this.getEle(".bgColor"); //背景色
+    this.txt = this.getEle(".txt"); //文本
+    this.slider = this.getEle(".slider"); //滑块
+    this.successMoveDistance = box.offsetWidth - this.slider.offsetWidth; //解锁需要滑动的距离
   },
   beforeDestroy() {
     this.$bus.$off("loginError") //生命周期结束，销毁自定义事件
   },
   methods: {
-    load() {
-      let box = this.getEle("#box"); //容器
-      this.bgColor = this.getEle(".bgColor"); //背景色
-      this.txt = this.getEle(".txt"); //文本
-      this.slider = this.getEle(".slider"); //滑块
-      this.successMoveDistance = box.offsetWidth - this.slider.offsetWidth; //解锁需要滑动的距离
-      this.slider.onmousedown = this.mousedownHandler
-      this.slider.ontouchstart = this.mousedownHandler
+    touchstart(e) {
+      // 如果你要阻止点击事件，请反注释下一行代码
+      // e.preventDefault()
+      this.startX = e.targetTouches[0].pageX;
     },
-    //按下
-    mousedownHandler(e) {
-      this.bgColor.style.transition = "";
-      this.slider.style.transition = "";
-      var e = e || window.event || e.which;
-      this.downX = e.clientX ? e.clientX : e.changedTouches[0].clientX;
-      if (!this.isSuccess) {
-        //在鼠标按下时，分别给鼠标添加移动和松开事件
-        document.onmousemove = this.mousemoveHandler;
-        document.onmouseup = this.mouseupHandler;
-        //添加移动端对应事件
-        document.ontouchmove = this.mousemoveHandler;
-        document.ontouchend = this.mouseupHandler;
-      }
+    touchmove(e) {
+      // e.preventDefault()
+      this.nowX = e.targetTouches[0].pageX
+      this.offsetX = this.nowX - this.startX
+      this.offsetX = this.getOffsetX(this.offsetX, 0, this.successMoveDistance) // 计算偏移量，防止出界
+      this.bgColor.style.width = this.offsetX + (this.slider.offsetWidth / 2) + "px"; // 调整背景颜色
+      this.bgColor.style.backgroundColor = "#009dd0";
+      this.slider.style.left = this.offsetX + "px";  // 调整滑块的偏移距离
+      this.bgColor.style.transition = "width 0s linear";
+      this.slider.style.transition = "left 0s linear";
     },
-    //滑动
-    mousemoveHandler(e) {
-      var e = e || window.event || e.which;
-      var moveX = e.clientX ? e.clientX : e.changedTouches[0].clientX;
-      var offsetX = this.getOffsetX(moveX - this.downX, 0, this.successMoveDistance);
-      this.bgColor.style.width = moveX - 30 + "px";
-      this.slider.style.left = offsetX + "px";
-      if (offsetX == this.successMoveDistance) {
-        this.isSuccess = true;
-        this.bgColor.style.width = offsetX + this.downX - 30 + "px";
-        this.slider.style.left = offsetX + "px";
-
-        //滑动成功时，移除鼠标按下事件和鼠标移动事件
-        this.slider.onmousedown = null;
-        document.onmousemove = null;
-        //移除移动端事件
-        document.ontouchstart = null;
-        document.ontouchmove = null;
-
-        this.success();
-      }
-      //如果不设置滑块滑动时会出现问题（目前还不知道为什么）
-      e.preventDefault();
-    },
-    //松开
-    mouseupHandler(e) {
-      if (!this.isSuccess) {
+    touchend(e) {
+      if (this.offsetX == this.successMoveDistance) { // 滑动到终点松开
+        this.success()
+      } else { // 中途松开
         this.bgColor.style.width = 0 + "px";
         this.slider.style.left = 0 + "px";
         this.bgColor.style.transition = "width 0.6s linear";
@@ -170,7 +141,7 @@ export default {
   }
   .slider {
     position: absolute;
-    left: 0;
+    left: -5px;
     top: -5px;
     width: 54px;
     height: 54px;

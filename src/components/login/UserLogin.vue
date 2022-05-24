@@ -38,16 +38,16 @@
         <img :src="captchaImg" @click="initCaptcha" class="captchaImg" alt="验证码" />
       </van-col>
     </van-row>
-
-    <!-- 登录表单-START -->
+    <!-- 登录表单-END -->
     <!-- 滑动输入-START -->
     <sild-to-un-lock :username="loginData.username" :password="loginData.password" :key="nowTimer" @actionLogin="actionLogin" />
     <!-- 滑动输入-END -->
+    <p class="toRegister" v-show="isShowBottom">还没有账号？<a href="javascript:void(0)" @click="toRegister">去注册</a></p>
     <!--房间选择START-->
     <select-address :isShow="isShowSelectAddress" :userId="loginUserId" />
     <!--房间选择END-->
-    <p class="toRegister" v-show="isShowBottom">还没有账号？<a href="javascript:void(0)" @click="toRegister">去注册</a></p>
   </div>
+
 </template>
 
 <script>
@@ -193,7 +193,6 @@ export default {
       // 身份信息未激活
       checkUserHasAddressReq().then(r => {
         if (r.code == 200) {
-          console.log(r.data)
           // 判断是否有绑定房价信息
           if (r.data == 0) {
             // 退出登录状态
@@ -347,6 +346,6 @@ input:focus {
 .captchaImg {
   border: 1px solid #eee;
   border-radius: 5px;
-  width: 100%;
+  max-width: 200px;
 }
 </style>

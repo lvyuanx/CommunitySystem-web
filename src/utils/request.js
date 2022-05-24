@@ -28,7 +28,7 @@ axios.interceptors.response.use(
 			case 401:
 				// 未登录 清除已登录状态
 				setStore('L-Token', '')
-				if (router.history.current.name !== '/') {
+				if (router.history.current.name !== 'userLogin') {
 					router.replace('/')
 					if (msg !== null) {
 						Toast.fail(msg)
