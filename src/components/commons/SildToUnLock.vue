@@ -40,6 +40,7 @@ export default {
     };
   },
   mounted() {
+
     this.$bus.$on("loginError", () => { //在总线上创建自定义事件用于接收数据
       this.isSuccess = false
       this.text = "滑动登录"
@@ -53,6 +54,9 @@ export default {
     this.txt = this.getEle(".txt"); //文本
     this.slider = this.getEle(".slider"); //滑块
     this.successMoveDistance = box.offsetWidth - this.slider.offsetWidth; //解锁需要滑动的距离
+    // 归位
+    this.bgColor.style.width = 0 + "px";
+    this.slider.style.left = 0 + "px";
   },
   beforeDestroy() {
     this.$bus.$off("loginError") //生命周期结束，销毁自定义事件
@@ -141,7 +145,7 @@ export default {
   }
   .slider {
     position: absolute;
-    left: -5px;
+    left: 0px;
     top: -5px;
     width: 54px;
     height: 54px;
