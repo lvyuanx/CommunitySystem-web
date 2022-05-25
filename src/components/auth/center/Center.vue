@@ -56,7 +56,7 @@ export default {
       userInfo: {
         nickName: "",
         duties: "",
-        avatar: "",
+        avatar: "/img/default/defaultHead.png",
       },
     };
   },
