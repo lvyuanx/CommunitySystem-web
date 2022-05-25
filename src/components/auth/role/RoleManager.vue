@@ -26,38 +26,28 @@
       <van-form @submit="onSubmit" style="padding: 5px">
         <van-field v-model="roleInfo.roleName" name="角色名" label="角色名" placeholder="角色名" :rules="[{ required: true, message: '请填写角色名' }]" />
         <van-field v-model="roleInfo.description" name="角色描述" label="角色描述" placeholder="角色描述" :rules="[{ required: true, message: '请填写角色描述' }]" />
-        <van-field v-model="periodName" rows="1" autosize type="textarea" center clearable label="选择期" placeholder="请选择期请输入">
+        <van-field v-model="periodName" disabled rows="1" autosize type="textarea" center clearable label="选择期" placeholder="请选择期请输入">
           <template #button>
             <van-button size="small" type="primary" @click="onSelectPeriod">选择</van-button>
           </template>
         </van-field>
       </van-form>
     </van-dialog>
-
-    <van-popup class="selectBuildingBox" v-show="showBox" v-model="selectPeriodShow" round position="bottom" closeable>
-      <div class="box">
-        <van-checkbox-group v-model="period">
-          <van-cell-group>
-            <van-cell v-for="(item, index) in communityList" clickable :key="item.value" :title="item.text" @click="toggle(index)">
-              <template #right-icon>
-                <van-checkbox :name="item" ref="checkboxes" />
-              </template>
-            </van-cell>
-          </van-cell-group>
-        </van-checkbox-group>
-      </div>
-    </van-popup>
     <role-resource-tab :isShow="roleResourcePopuShow" :roleResource="roleResourceArr" />
+    <update-role-box :isShow="isShowUpdateRoleBox" :periodIds="updateRoleInfo" />
   </div>
 </template>
 
 <script>
 import { findAllCommunityInfoReq, addCommunityRoleReq, findCommunityRoleReq, deleteRoleReq } from '../../../utils/api'
 import RoleResourceTab from '../../commons/role/index.vue'
+import UpdateRoleBox from '../../commons/role/UpdateRoleBox.vue'
 export default {
   name: 'RoleManager',
   data() {
     return {
+      updateRoleInfo: {},
+      isShowUpdateRoleBox: false,
       roleResourceArr: [],
       roleResourcePopuShow: false,
       addBoxShow: false,
@@ -91,17 +81,8 @@ export default {
       list: [], // 页面列表信息
     }
   },
-  components: { RoleResourceTab },
+  components: { RoleResourceTab, UpdateRoleBox },
   watch: {
-    period: {
-      deep: true, // 深度监视
-      immediate: true, //初始化时让handler调用一下
-      handler(newValue, oldVale) {
-        let nameList = this.period.map(item => item.text)
-        this.periodName = nameList.join(",")
-        this.roleInfo.periodIds = this.period.map(item => item.value)
-      }
-    },
     findQuery: {
       deep: true, // 深度监视
       immediate: false, //初始化时让handler调用一下
@@ -119,26 +100,36 @@ export default {
     this.$bus.$on("changeRoleResourcePopuShow", (isShow) => { //在总线上创建自定义事件用于接收数据
       this.roleResourcePopuShow = isShow
     })
+    this.$bus.$on("closeUpdateRoleBox", (params) => { //在总线上创建自定义事件用于接收数据
+      console.log("params", params)
+      if (!params.isOnCancel) {
+        this.roleInfo.periodIds = params.result
+        this.periodName = params.resultNameStr
+      }
+      this.isShowUpdateRoleBox = params.isShow
+    })
   },
   beforeDestroy() {
     this.$bus.$off("changeRoleResourcePopuShow")
+    this.$bus.$off("closeUpdateRoleBox")
   },
   methods: {
     updateRole(item) { // 修改角色
       this.addBoxShow = true
-      if (this.period.length > 0) {
-        this.period = []
-      }
+      // if (this.period.length > 0) {
+      //   this.period = []
+      // }
       this.roleInfo = {
         roleName: item.roleName,
         description: item.description,
         roleId: item.roleId,
         periodIds: item.communityResourceVoList.map(i => i.parentId)
       }
-      this.findAllCommunityInfo(this.roleInfo.periodIds);
+      this.periodName = item.periodNameStr
     },
     onAddBox() {
       this.addBoxShow = true
+      this.periodName = ''
       this.roleInfo = {
         roleName: '',
         description: '',
@@ -164,51 +155,22 @@ export default {
     onSubmit() {
 
     },
-    findAllCommunityInfo(periodIds) { // 查询社区结构
-      findAllCommunityInfoReq().then(res => {
-        if (res.code == 200) {
-          this.communityList = res.data
-          if (periodIds != undefined && periodIds.length > 0) {
-            this.communityList.forEach(i => {
-              if (periodIds.indexOf(i.value) > -1) {
-                this.period.push(i)
-              }
-            })
-          }
-
-          this.echo()
-        }
-      })
-    },
-    toggle(index) { // 选择
-      this.$refs.checkboxes[index].toggle();
-    },
-    onSelectPeriod() { // 打卡选择期的弹窗
-      this.findAllCommunityInfo()
-      this.selectPeriodShow = true
-
-    },
-    echo() { // 回显选择界面
-      this.echoPeriod = this.period
-      this.period = []
-      if (this.$refs.checkboxes == undefined || this.$refs.checkboxes.length < 1) {
-        let name = this.echoPeriod.map(item => item.text).join(",")
-        this.periodName = name
-        return;
+    onSelectPeriod() { // 打开选择期的弹窗
+      this.updateRoleInfo = {
+        date: new Date(),
+        periodIds: this.roleInfo.periodIds
       }
-      this.echoPeriod.forEach(item => {
-        this.communityList.forEach((value, index) => {
-          if (item.value == value.value) {
-            this.$refs.checkboxes[index].toggle(true);
-          }
-        })
-      })
+      this.isShowUpdateRoleBox = true
+
     },
     addCommunityRole() { // 添加角色
       addCommunityRoleReq({}, this.roleInfo).then(res => {
         if (res == 200) {
           this.$toast("操作成功")
           this.addCommunityRole()
+          this.handlPage()
+          this.findCommunityRole() // 查询列表
+
         } else {
           this.$toast(res.message)
         }

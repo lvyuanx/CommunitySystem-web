@@ -4,7 +4,7 @@
       <van-row class="roleBox">
         <van-checkbox-group v-model="result" direction="horizontal">
           <van-col span="12" v-for="item in roleResource" :key="item.parentId">
-            <van-checkbox class="itemBox" shape="square" label-disabled :name="item.parentId">{{item.periodName}}</van-checkbox>
+            <span>{{item.periodName}}</span>
           </van-col>
         </van-checkbox-group>
       </van-row>
